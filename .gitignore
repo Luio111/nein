@@ -1,0 +1,6 @@
+node_modules/
+.DS_Store
+*.log
+# Partial benchmark runs stay local until you decide to publish them.
+bench/results/*/
+!bench/results/README.md

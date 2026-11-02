@@ -1,0 +1,21 @@
+{
+  "name": "nein",
+  "interface": {
+    "displayName": "NEIN"
+  },
+  "plugins": [
+    {
+      "name": "nein",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/Luio111/nein.git",
+        "ref": "main"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

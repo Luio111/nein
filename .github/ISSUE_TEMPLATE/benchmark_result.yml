@@ -1,0 +1,19 @@
+name: Benchmark result
+description: Share a benchmark run on another model or agent
+labels: [benchmark]
+body:
+  - type: input
+    id: model
+    attributes:
+      label: Model and agent
+      placeholder: e.g. claude-opus-5-5 in Claude Code 2.1.309
+    validations:
+      required: true
+  - type: textarea
+    id: summary
+    attributes:
+      label: summary.md
+      description: Paste the summary.md that bench/report.mjs wrote.
+      render: markdown
+    validations:
+      required: true

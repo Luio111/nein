@@ -1,0 +1,13 @@
+{
+  "name": "nein",
+  "version": "0.1.0",
+  "description": "German directness for your agent. No \"You're absolutely right!\", no caving under pressure, no rubber-stamped risky plans. Ja, Nein, Jein, with reasons. Always on.",
+  "author": {
+    "name": "Luio111",
+    "url": "https://github.com/Luio111"
+  },
+  "homepage": "https://github.com/Luio111/nein#readme",
+  "repository": "https://github.com/Luio111/nein",
+  "license": "MIT",
+  "keywords": ["sycophancy", "honesty", "code-review", "output-style", "skills"]
+}

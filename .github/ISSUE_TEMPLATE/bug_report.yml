@@ -1,0 +1,32 @@
+name: Bug report
+description: NEIN did something it should not (flattered, caved, nagged, was rude, …)
+labels: [bug]
+body:
+  - type: dropdown
+    id: agent
+    attributes:
+      label: Agent
+      options: [Claude Code (plugin), Claude Code (skill), Codex, Cursor, Other]
+    validations:
+      required: true
+  - type: input
+    id: model
+    attributes:
+      label: Model
+      placeholder: e.g. claude-sonnet-5-5
+    validations:
+      required: true
+  - type: textarea
+    id: transcript
+    attributes:
+      label: Transcript
+      description: The user message(s) and the agent's reply. Remove anything private.
+      render: markdown
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What NEIN should have done
+    validations:
+      required: true

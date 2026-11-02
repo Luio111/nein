@@ -1,0 +1,36 @@
+{
+  "name": "nein",
+  "version": "0.1.0",
+  "private": true,
+  "description": "German directness for AI agents. Stops sycophancy: Ja, Nein, Jein, with reasons.",
+  "license": "MIT",
+  "author": "Luio111 (https://github.com/Luio111)",
+  "homepage": "https://github.com/Luio111/nein#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Luio111/nein.git"
+  },
+  "bugs": "https://github.com/Luio111/nein/issues",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test tests/",
+    "validate": "node scripts/validate.mjs",
+    "sync": "node scripts/sync.mjs",
+    "bench": "node bench/run.mjs",
+    "bench:judge": "node bench/judge.mjs",
+    "bench:report": "node bench/report.mjs",
+    "check": "npm run validate && npm test"
+  },
+  "keywords": [
+    "agent-skills",
+    "claude-code",
+    "codex",
+    "cursor",
+    "sycophancy",
+    "ai-agents",
+    "skill"
+  ]
+}

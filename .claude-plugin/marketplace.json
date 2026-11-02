@@ -1,0 +1,17 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "nein",
+  "description": "German directness for AI agents. Ja, Nein, Jein, with reasons.",
+  "owner": {
+    "name": "Luio111",
+    "url": "https://github.com/Luio111"
+  },
+  "plugins": [
+    {
+      "name": "nein",
+      "description": "Stops sycophancy: no flattery, no caving under pressure, no rubber-stamped risky plans.",
+      "source": "./",
+      "category": "productivity"
+    }
+  ]
+}

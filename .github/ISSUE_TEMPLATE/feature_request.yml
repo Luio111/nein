@@ -1,0 +1,16 @@
+name: Feature request
+description: A new rule, agent integration or benchmark idea
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: The sycophantic behavior you keep seeing
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What you would like NEIN to do instead
+    validations:
+      required: true

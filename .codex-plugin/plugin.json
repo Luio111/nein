@@ -1,0 +1,31 @@
+{
+  "name": "nein",
+  "version": "0.1.0",
+  "description": "German directness for Codex: verdict first (Ja / Nein / Jein), no flattery, no caving under pressure, no rubber-stamped risky plans.",
+  "author": {
+    "name": "Luio111",
+    "url": "https://github.com/Luio111"
+  },
+  "homepage": "https://github.com/Luio111/nein#readme",
+  "repository": "https://github.com/Luio111/nein",
+  "license": "MIT",
+  "keywords": ["sycophancy", "honesty", "code-review", "skills", "codex"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "NEIN",
+    "shortDescription": "Stops your agent from saying \"You're absolutely right!\"",
+    "longDescription": "German directness for Codex. Every claim, plan or pushback gets a verdict first (Ja, Nein or Jein) and the reason. No flattery, no caving to pressure without evidence, no rubber-stamped risky plans, and a clean change of mind when you bring real facts.",
+    "developerName": "Luio111",
+    "category": "Productivity",
+    "capabilities": ["Instructions"],
+    "websiteURL": "https://github.com/Luio111/nein",
+    "defaultPrompt": [
+      "Use NEIN for this session.",
+      "Review this plan with NEIN: worst problem first.",
+      "Ja or Nein: is this approach safe?"
+    ],
+    "brandColor": "#D7261E",
+    "composerIcon": "./assets/icon.png",
+    "logo": "./assets/icon.png"
+  }
+}

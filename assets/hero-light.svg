@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="440" viewBox="0 0 1200 440" role="img" aria-labelledby="t d">
+  <title id="t">NEIN.</title>
+  <desc id="d">A chat bubble saying "You're absolutely right!" is struck through in red. Next to it, in huge letters: NEIN. Below: German directness for AI agents.</desc>
+  <style>
+    .sans { font-family: "Helvetica Neue", Helvetica, Arial, "Liberation Sans", sans-serif; }
+  </style>
+  <g transform="translate(70 118)">
+    <rect x="0" y="0" width="372" height="78" rx="22" fill="#eceef1"/>
+    <path d="M36 78 L28 102 L62 78 Z" fill="#eceef1"/>
+    <text x="186" y="49" text-anchor="middle" class="sans" font-size="27" font-weight="500" fill="#3a3f45">You're absolutely right!</text>
+    <line x1="18" y1="42" x2="354" y2="36" stroke="#D7261E" stroke-width="6" stroke-linecap="round"/>
+  </g>
+  <text x="1130" y="268" text-anchor="end" class="sans" font-size="236" font-weight="900" letter-spacing="-8" fill="#111111">NEIN<tspan fill="#D7261E">.</tspan></text>
+  <text x="1130" y="346" text-anchor="end" class="sans" font-size="34" font-weight="500" fill="#55595f">German directness for AI agents.</text>
+  <text x="1130" y="392" text-anchor="end" class="sans" font-size="24" font-weight="400" fill="#55595f">Ja · Nein · Jein — always with a reason.</text>
+</svg>
