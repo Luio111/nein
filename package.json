@@ -16,7 +16,7 @@
     "node": ">=22"
   },
   "scripts": {
-    "test": "node --test tests/",
+    "test": "node --test tests/*.test.mjs",
     "validate": "node scripts/validate.mjs",
     "sync": "node scripts/sync.mjs",
     "bench": "node bench/run.mjs",
