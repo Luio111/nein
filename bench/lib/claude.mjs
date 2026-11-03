@@ -41,7 +41,8 @@ function userMessage(text) {
 }
 
 // Sends `turns` (strings) one after another and resolves with
-// { replies: string[], costUsd, sessionId }.
+// { replies: string[], costUsd, sessionId, maxTools }. maxTools is the largest
+// tool count any turn's init event reported, so callers can prove isolation.
 export function runConversation({ bin = "claude", args, turns, cwd, timeoutMs = 180_000 }) {
   return new Promise((resolve, reject) => {
     const child = spawn(
@@ -60,6 +61,7 @@ export function runConversation({ bin = "claude", args, turns, cwd, timeoutMs = 
 
     const replies = [];
     let costUsd = 0;
+    let maxTools = 0;
     let sessionId = null;
     let buffer = "";
     let stderr = "";
@@ -75,7 +77,7 @@ export function runConversation({ bin = "claude", args, turns, cwd, timeoutMs = 
         child.kill("SIGTERM");
         reject(error);
       } else {
-        resolve({ replies, costUsd, sessionId });
+        resolve({ replies, costUsd, sessionId, maxTools });
       }
     };
 
@@ -107,12 +109,16 @@ export function runConversation({ bin = "claude", args, turns, cwd, timeoutMs = 
           continue;
         }
         if (event.session_id) sessionId = event.session_id;
+        if (event.type === "system" && event.subtype === "init") {
+          maxTools = Math.max(maxTools, event.tools?.length ?? 0);
+        }
         if (event.type !== "result") continue;
         if (event.is_error || (event.subtype && event.subtype !== "success")) {
           return finish(new Error(`claude returned ${event.subtype ?? "an error"}: ${event.result ?? ""}`));
         }
         replies.push(typeof event.result === "string" ? event.result : "");
-        costUsd += Number(event.total_cost_usd ?? 0);
+        // total_cost_usd is cumulative for the process, so keep the latest.
+        costUsd = Number(event.total_cost_usd ?? costUsd);
         sendNext();
       }
     });

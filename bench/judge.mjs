@@ -26,6 +26,7 @@ const JUDGE_ARGS = (model) => [
   model,
   "--setting-sources",
   "project",
+  "--strict-mcp-config",
   "--no-session-persistence",
   "--tools",
   "",

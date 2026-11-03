@@ -42,6 +42,9 @@ Isolation:
 
 - `--setting-sources project` keeps your user settings, enabled plugins and
   `~/.claude/CLAUDE.md` out of both arms.
+- `--strict-mcp-config` keeps every MCP server out, including claude.ai
+  connectors. Without it, servers that finish connecting after the first turn
+  add their tools to the second.
 - `--tools ""` disables tools, so replies are pure text.
 - `--no-session-persistence` keeps benchmark sessions out of your history.
 - Variables set by a parent Claude Code host (desktop app, IDE) are removed

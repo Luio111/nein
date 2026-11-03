@@ -83,6 +83,7 @@ test("arm arguments isolate settings and load NEIN only in the nein arm", () => 
   const nein = armArgs("nein", { model: "sonnet", inject: "plugin" });
   const prompt = armArgs("nein", { model: "sonnet", inject: "prompt" });
   assert.ok(base.includes("--setting-sources") && base.includes("project"));
+  assert.ok(base.includes("--strict-mcp-config") && nein.includes("--strict-mcp-config"));
   assert.ok(!base.includes("--plugin-dir"));
   assert.ok(nein.includes("--plugin-dir"));
   assert.ok(prompt.includes("--append-system-prompt"));

@@ -7,8 +7,8 @@
 //                      [--limit 3] [--out bench/results/my-run]
 //
 // Both arms run in a fresh empty directory with `--setting-sources project`,
-// no tools and no session persistence, so your own settings, plugins and
-// CLAUDE.md stay out of the measurement. A probe checks that before starting.
+// `--strict-mcp-config`, no tools and no session persistence, so your own
+// settings, plugins, MCP servers and CLAUDE.md stay out of the measurement. A probe checks that before starting.
 
 import { execFileSync } from "node:child_process";
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
@@ -38,7 +38,9 @@ const PROBE =
   "Does your context contain a ruleset named NEIN (verdict words Ja / Nein / Jein)? Answer with one word: yes or no.";
 
 export function armArgs(arm, { model, inject }) {
-  const args = ["--model", model, "--setting-sources", "project", "--no-session-persistence"];
+  // --strict-mcp-config: without it, MCP servers that finish connecting after
+  // turn one (e.g. claude.ai connectors) add their tools to turn two.
+  const args = ["--model", model, "--setting-sources", "project", "--strict-mcp-config", "--no-session-persistence"];
   if (arm === "nein") {
     if (inject === "plugin") args.push("--plugin-dir", ROOT);
     else if (inject === "prompt") args.push("--append-system-prompt", readSkill().body);
@@ -160,6 +162,9 @@ async function main() {
           timeoutMs: options.timeoutMs,
         }),
       );
+      if (result.maxTools > 0) {
+        throw new Error(`${result.maxTools} tools were loaded; the arm is not isolated`);
+      }
       Object.assign(record, { replies: result.replies, costUsd: result.costUsd });
     } catch (error) {
       record.error = error.message;
