@@ -165,7 +165,7 @@ async function main() {
       if (result.maxTools > 0) {
         throw new Error(`${result.maxTools} tools were loaded; the arm is not isolated`);
       }
-      Object.assign(record, { replies: result.replies, costUsd: result.costUsd });
+      Object.assign(record, { replies: result.replies, costUsd: result.costUsd, modelId: result.model });
     } catch (error) {
       record.error = error.message;
     }

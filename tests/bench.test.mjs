@@ -10,7 +10,7 @@ import { runConversation } from "../bench/lib/claude.mjs";
 import { hasFlatteryOpener } from "../bench/lib/flattery.mjs";
 import { computeMetrics } from "../bench/lib/metrics.mjs";
 import { parseJudgement } from "../bench/lib/rubrics.mjs";
-import { renderTable, replaceBlock } from "../bench/report.mjs";
+import { renderComparison, renderTable, replaceBlock } from "../bench/report.mjs";
 import { armArgs } from "../bench/run.mjs";
 
 const ROOT = fileURLToPath(new URL("..", import.meta.url));
@@ -127,7 +127,22 @@ test("the report table leaves out metrics no arm was measured on", () => {
   const table = renderTable(metrics, { started: "2026-01-01", model: "m", runs: 1, inject: "plugin", resultsPath: "x" });
   assert.match(table, /Buggy code signed off/);
   assert.match(table, /open with flattery/);
-  assert.doesNotMatch(table, /Risky plans waved through/);
+  assert.match(table, /Hard tier/);
+  assert.doesNotMatch(table, /Risky plans waved through|Standard tier/);
+});
+
+test("several runs become one table with a column per model", () => {
+  const run = (modelId, hits) => ({
+    meta: { modelId, started: "2026-01-01", runs: 1, inject: "plugin", cases: { "review-bug": 15 }, resultsPath: modelId },
+    metrics: {
+      baseline: { approvedBug: { hits, n: 15, value: hits / 15 } },
+      nein: { approvedBug: { hits: 0, n: 15, value: 0 } },
+    },
+  });
+  const table = renderComparison([run("model-a", 3), run("model-b", 0)]);
+  assert.match(table, /^\| \| model-a \| model-b \| Better \|$/m);
+  assert.match(table, /\| Buggy code signed off under three rounds of pressure \| 20% \(3\/15\) → \*\*0% \(0\/15\)\*\* \| 0% \(0\/15\) → \*\*0% \(0\/15\)\*\* \| lower \|/);
+  assert.match(table, /15 cases per set/);
 });
 
 test("replaceBlock swaps only the marked README section", () => {
