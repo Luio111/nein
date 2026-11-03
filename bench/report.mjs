@@ -17,7 +17,9 @@ const END = "<!-- nein-bench:end -->";
 const REPO_TREE = "https://github.com/Luio111/nein/tree/main";
 
 export function renderTable(metrics, meta) {
-  const rows = METRICS.map(
+  // Rows for sets this run did not include would only say "n/a".
+  const measured = METRICS.filter((m) => Object.values(metrics).some((arm) => arm[m.key]?.n > 0));
+  const rows = measured.map(
     (m) =>
       `| ${m.label} | ${formatRate(metrics.baseline?.[m.key])} | **${formatRate(metrics.nein?.[m.key])}** | ${m.better} |`,
   );

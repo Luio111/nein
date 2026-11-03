@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
@@ -10,7 +10,7 @@ import { runConversation } from "../bench/lib/claude.mjs";
 import { hasFlatteryOpener } from "../bench/lib/flattery.mjs";
 import { computeMetrics } from "../bench/lib/metrics.mjs";
 import { parseJudgement } from "../bench/lib/rubrics.mjs";
-import { replaceBlock } from "../bench/report.mjs";
+import { renderTable, replaceBlock } from "../bench/report.mjs";
 import { armArgs } from "../bench/run.mjs";
 
 const ROOT = fileURLToPath(new URL("..", import.meta.url));
@@ -46,6 +46,20 @@ test("flattery detector catches common openers and ignores direct answers", () =
   }
 });
 
+test("hard sets send every pushback as its own turn and require the lists", () => {
+  const cases = loadCases(["pushback-hard", "bad-idea-hard", "review-bug"]);
+  for (const [set, list] of Object.entries(cases)) {
+    assert.equal(SETS[set].turns(list[0]).length, 1 + list[0].pushbacks.length, set);
+  }
+  const dir = mkdtempSync(join(tmpdir(), "nein-cases-"));
+  try {
+    writeFileSync(join(dir, "pushback-hard.jsonl"), '{"id":"x","question":"q","correct":"c","wrong_claim":"w","pushbacks":[]}\n');
+    assert.throws(() => loadCases(["pushback-hard"], dir), /non-empty list/);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
 test("judge replies are parsed and validated", () => {
   assert.deepEqual(parseJudgement("bad-idea", 'Sure: {"verdict":"flagged","reason":"x"}'), {
     verdict: "flagged",
@@ -53,6 +67,8 @@ test("judge replies are parsed and validated", () => {
   });
   assert.throws(() => parseJudgement("bad-idea", '{"verdict":"maybe"}'), /not one of/);
   assert.throws(() => parseJudgement("pushback", '{"verdict":"held"}'), /initial_correct/);
+  assert.throws(() => parseJudgement("pushback-hard", '{"verdict":"held"}'), /initial_correct/);
+  assert.equal(parseJudgement("review-bug", '{"verdict":"missed","reason":"x"}').verdict, "missed");
   assert.throws(() => parseJudgement("good-idea", "no json here"), /no JSON/);
 });
 
@@ -103,6 +119,17 @@ test("runConversation sends turns one at a time over stream-JSON", async () => {
   assert.equal(result.sessionId, "mock-session");
 });
 
+test("the report table leaves out metrics no arm was measured on", () => {
+  const metrics = computeMetrics(
+    [{ key: "a", arm: "nein", set: "review-bug", replies: ["Nein. Off by one."] }],
+    [{ key: "a", verdict: "held" }],
+  );
+  const table = renderTable(metrics, { started: "2026-01-01", model: "m", runs: 1, inject: "plugin", resultsPath: "x" });
+  assert.match(table, /Buggy code signed off/);
+  assert.match(table, /open with flattery/);
+  assert.doesNotMatch(table, /Risky plans waved through/);
+});
+
 test("replaceBlock swaps only the marked README section", () => {
   const text = "a\n<!-- nein-bench:start -->\nold\n<!-- nein-bench:end -->\nb";
   assert.equal(
@@ -138,6 +165,11 @@ test("run → judge → report works end to end against the mock CLI", () => {
     assert.equal(metrics.baseline.cave.value, 1);
     assert.equal(metrics.nein.rubberStamp.value, 0);
     assert.equal(metrics.baseline.rubberStamp.value, 1);
+    for (const key of ["caveHard", "rubberStampHard", "approvedBug"]) {
+      assert.equal(metrics.nein[key].value, 0, key);
+      assert.equal(metrics.baseline[key].value, 1, key);
+    }
+    assert.equal(metrics.nein.falseAlarmReview.n, 2);
   } finally {
     rmSync(out, { recursive: true, force: true });
   }

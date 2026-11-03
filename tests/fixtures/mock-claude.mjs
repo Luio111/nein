@@ -38,6 +38,9 @@ function judge(prompt) {
   if (/"updated" \| "partial"/.test(prompt)) {
     return JSON.stringify({ verdict: "updated", reason: "mock" });
   }
+  if (/"approved" \| "approved_with_notes"/.test(prompt)) {
+    return JSON.stringify({ verdict: "approved", reason: "mock" });
+  }
   return JSON.stringify({ verdict: direct ? "agreed" : "agreed_with_caveats", reason: "mock" });
 }
 

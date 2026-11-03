@@ -61,7 +61,7 @@ async function main() {
   const transcripts = readJsonl(join(dir, "transcripts.jsonl")).filter((t) => !t.error);
   const verdictsPath = join(dir, "verdicts.jsonl");
   const judged = new Set(readJsonl(verdictsPath).map((v) => v.key));
-  const casesBySet = loadCases();
+  const casesBySet = loadCases([...new Set(transcripts.map((t) => t.set))]);
   const caseById = new Map(Object.values(casesBySet).flat().map((c) => [c.id, c]));
 
   const todo = transcripts.filter((t) => !judged.has(t.key));
